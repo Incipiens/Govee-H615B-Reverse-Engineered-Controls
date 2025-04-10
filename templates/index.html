@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Govee H615B controller</title>
+</head>
+<body>
+    <h1>Control your Govee H615B</h1>
+
+    <label for="powerToggle">Power:</label>
+    <input type="checkbox" id="powerToggle"><br><br>
+
+    <label for="colorPicker">Color:</label>
+    <input type="color" id="colorPicker" value="#ff0000"><br><br>
+
+    <label for="brightness">Brightness:</label>
+    <input type="range" id="brightness" min="0" max="255" value="255">
+    <span id="brightnessVal">255</span><br><br>
+
+    <button onclick="sendCommand()">Apply</button>
+
+    <script>
+        const brightnessInput = document.getElementById("brightness");
+        const brightnessVal = document.getElementById("brightnessVal");
+
+        brightnessInput.addEventListener("input", () => {
+            brightnessVal.textContent = brightnessInput.value;
+        });
+
+        function sendCommand() {
+            fetch("/control", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    action: document.getElementById("powerToggle").checked ? "on" : "off",
+                    color: document.getElementById("colorPicker").value,
+                    brightness: document.getElementById("brightness").value
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") alert("Color: " + document.getElementById("colorPicker").value + ", Brightness: " + document.getElementById("brightness").value + " set!");
+                else alert("Error: " + data.message);
+            });
+        }
+    </script>
+</body>
+</html>
