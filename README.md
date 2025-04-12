@@ -26,7 +26,7 @@ h615b_controller_cli.py is included so that you can see how this would be implem
 
 2. Start the server:
     ```bash
-    flask run
+    flask run --host=0.0.0.0
     ```
 
 3. Open your browser and navigate to `http://localhost:5000`.
