@@ -43,5 +43,32 @@
             });
         }
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Values injected from Flask
+            const initialStatus = "{{ status }}";
+            const initialColor = "{{ color }}";
+            const initialBrightness = {{ brightness if brightness is not none else 255 }};
+
+            // Set power toggle
+            const powerToggle = document.getElementById("powerToggle");
+            powerToggle.checked = initialStatus === "on";
+
+            // Set color picker
+            const colorPicker = document.getElementById("colorPicker");
+            if (initialColor) {
+                colorPicker.value = initialColor;
+            }
+
+            // Set brightness slider and value label
+            const brightnessInput = document.getElementById("brightness");
+            const brightnessVal = document.getElementById("brightnessVal");
+
+            brightnessInput.value = initialBrightness;
+            brightnessVal.textContent = initialBrightness;
+        });
+    </script>
+
 </body>
 </html>
