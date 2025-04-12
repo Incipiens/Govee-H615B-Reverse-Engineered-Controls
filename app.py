@@ -34,17 +34,17 @@ async def index():
 # This is used by the frontend to update the UI, and can be called by external tools built to control the H615B
 @app.route("/api/light/status", methods=["GET"])
 async def get_status():
-    STATUS = await get_power_status()
-    COLOR, BRIGHTNESS = await get_color_brightness()
+    now = time.time()
+    cache_lifetime = 30
+    if now - light_cache["LU"] > cache_lifetime:
+        light_cache["STATUS"] = await get_power_status()
+        light_cache["COLOR"], light_cache["BRIGHTNESS"] = await get_color_brightness()
+        light_cache["LU"] = now
 
-    print(STATUS)
-
-    if STATUS is None:
+    if light_cache["STATUS"] is None:
         return jsonify({"status": "error", "message": "Device not found"}), 404
     
-    COLOR, BRIGHTNESS = await get_color_brightness()
-    
-    return jsonify({"status": "success", "power": STATUS, "color": COLOR, "brightness": BRIGHTNESS})
+    return jsonify({"status": "success", "power": light_cache["STATUS"], "color": light_cache["COLOR"], "brightness": light_cache["BRIGHTNESS"]})
 
 # API to set power status of on or off, we update light cache if this is called
 @app.route("/api/light/power", methods=["POST"])
