@@ -13,7 +13,7 @@ h615b_controller_cli.py is included so that you can see how this would be implem
 ## Prerequisites
 
 - Python
-- Flask
+- Flask[async]
 - Bleak
 
 ## Installation
